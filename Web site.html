@@ -1,0 +1,1492 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>OV-Translator – Echtzeit-Übersetzung für Verwaltungen, Schulen & Kirchen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="description"
+    content="OV-Translator ist ein professionelles Echtzeit-Übersetzungssystem für Verwaltungen, Schulen, Kirchen und soziale Einrichtungen – lokal, sicher und ohne Cloud-Zwang."
+  />
+  <style>
+    :root {
+      --bg-main: #05070b;
+      --bg-elevated: #111827;
+      --bg-elevated-soft: #0b101a;
+      --accent: #3b82f6;
+      --accent-soft: rgba(59, 130, 246, 0.18);
+      --accent-strong: #60a5fa;
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --text-soft: #6b7280;
+      --border-subtle: #1f2937;
+      --danger: #f97373;
+      --success: #4ade80;
+      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.6);
+      --radius-lg: 20px;
+      --radius-sm: 12px;
+      --transition-fast: 0.18s ease-out;
+      --transition-med: 0.3s ease;
+      --max-width: 1120px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      scroll-behavior: smooth;
+      background: radial-gradient(circle at top, #020617 0, #020617 30%, #020617 60%, #000 100%);
+      color: var(--text-main);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    main {
+      flex: 1;
+    }
+
+    /* Layout helpers */
+    .container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    section {
+      padding: 4rem 0;
+    }
+
+    @media (min-width: 1024px) {
+      section {
+        padding: 5rem 0;
+      }
+    }
+
+    .section-header {
+      margin-bottom: 2.5rem;
+      text-align: left;
+    }
+
+    .section-kicker {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--accent-strong);
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .section-title {
+      font-size: 1.9rem;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-subtitle {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      max-width: 640px;
+    }
+
+    /* NAVBAR */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(
+        to bottom,
+        rgba(3, 7, 18, 0.96),
+        rgba(3, 7, 18, 0.84),
+        transparent
+      );
+      border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.7rem 1.5rem;
+      max-width: var(--max-width);
+      margin: 0 auto;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .nav-logo {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: radial-gradient(circle at 30% 20%, #60a5fa 0, #1f2937 38%, #020617 100%);
+      box-shadow: 0 0 20px rgba(37, 99, 235, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: #e5f1ff;
+    }
+
+    .nav-title {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-title-main {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .nav-title-sub {
+      font-size: 0.72rem;
+      color: var(--text-soft);
+    }
+
+    .nav-links {
+      display: none;
+      align-items: center;
+      gap: 1.2rem;
+      font-size: 0.9rem;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      position: relative;
+      padding-bottom: 0.1rem;
+    }
+
+    .nav-links a:hover {
+      color: var(--text-main);
+    }
+
+    .nav-links a::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: -0.16rem;
+      width: 0;
+      height: 1px;
+      background: linear-gradient(to right, var(--accent), var(--accent-strong));
+      transition: width var(--transition-fast);
+    }
+
+    .nav-links a:hover::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      display: none;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid transparent;
+      padding: 0.5rem 1.1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      transition: background var(--transition-med), color var(--transition-med), border-color var(--transition-med),
+        box-shadow var(--transition-med), transform var(--transition-fast);
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #2563eb, #3b82f6, #38bdf8);
+      color: #f9fafb;
+      box-shadow: 0 15px 30px rgba(37, 99, 235, 0.6);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 18px 38px rgba(37, 99, 235, 0.75);
+    }
+
+    .btn-ghost {
+      border-color: rgba(148, 163, 184, 0.6);
+      color: var(--text-muted);
+      background: radial-gradient(circle at top left, rgba(148, 163, 184, 0.18), transparent 60%);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text-main);
+      border-color: rgba(148, 163, 184, 0.9);
+      background: radial-gradient(circle at top left, rgba(148, 163, 184, 0.26), transparent 70%);
+    }
+
+    .nav-burger {
+      display: inline-flex;
+      flex-direction: column;
+      gap: 4px;
+      width: 28px;
+      cursor: pointer;
+    }
+
+    .nav-burger span {
+      height: 2px;
+      border-radius: 999px;
+      background: #9ca3af;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .nav-burger.active span:nth-child(1) {
+      transform: translateY(6px) rotate(45deg);
+    }
+
+    .nav-burger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .nav-burger.active span:nth-child(3) {
+      transform: translateY(-6px) rotate(-45deg);
+    }
+
+    .nav-mobile {
+      display: none;
+      flex-direction: column;
+      gap: 0.3rem;
+      padding: 0 1.5rem 0.8rem;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.96), rgba(3, 7, 18, 0.98));
+      border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+    }
+
+    .nav-mobile a {
+      padding: 0.35rem 0;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+
+    .nav-mobile a:hover {
+      color: var(--accent-strong);
+    }
+
+    .nav-mobile .btn {
+      margin-top: 0.4rem;
+      width: 100%;
+      justify-content: center;
+    }
+
+    @media (min-width: 880px) {
+      .nav-links {
+        display: flex;
+      }
+      .nav-cta {
+        display: flex;
+      }
+      .nav-burger {
+        display: none;
+      }
+      .nav-mobile {
+        display: none !important;
+      }
+    }
+
+    /* HERO */
+    .hero {
+      padding-top: 2.8rem;
+      padding-bottom: 3.8rem;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr);
+      gap: 2.8rem;
+      align-items: center;
+    }
+
+    @media (min-width: 960px) {
+      .hero-grid {
+        grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      }
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.2rem 0.5rem 0.2rem 0.25rem;
+      border-radius: 999px;
+      background: radial-gradient(circle at left, rgba(59, 130, 246, 0.22), transparent 64%);
+      margin-bottom: 0.85rem;
+    }
+
+    .hero-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: radial-gradient(circle at center, #4ade80 0, #16a34a 40%, #064e3b 100%);
+      box-shadow: 0 0 14px rgba(34, 197, 94, 0.9);
+    }
+
+    .hero-eyebrow-text {
+      font-size: 0.75rem;
+      color: var(--accent-strong);
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .hero-title {
+      font-size: 2.15rem;
+      line-height: 1.15;
+      font-weight: 800;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero-title span {
+      background: linear-gradient(120deg, #60a5fa, #22c55e, #a855f7);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero-subtitle {
+      font-size: 0.98rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin-bottom: 1.4rem;
+    }
+
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.8rem;
+    }
+
+    .hero-badge {
+      font-size: 0.73rem;
+      padding: 0.15rem 0.6rem;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.34);
+      color: var(--text-soft);
+      background: radial-gradient(circle at top left, rgba(31, 41, 55, 0.8), rgba(15, 23, 42, 0.9));
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      margin-bottom: 1.3rem;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.1rem;
+      font-size: 0.78rem;
+      color: var(--text-soft);
+    }
+
+    .hero-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .hero-meta-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: #4ade80;
+    }
+
+    .hero-right {
+      position: relative;
+    }
+
+    .hero-panel {
+      border-radius: 26px;
+      padding: 1.4rem 1.3rem;
+      background: radial-gradient(circle at top left, #111827, #020617);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      box-shadow: var(--shadow-soft);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+
+    .hero-panel-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .hero-tag {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      border: 1px solid rgba(59, 130, 246, 0.4);
+    }
+
+    .hero-panel-body {
+      font-family: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 0.76rem;
+      color: #e5e7eb;
+      background: #020617;
+      border-radius: 16px;
+      padding: 0.9rem 0.8rem;
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      max-height: 260px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero-panel-body::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      height: 40%;
+      background: linear-gradient(to top, rgba(3, 7, 18, 0.98), transparent);
+      pointer-events: none;
+    }
+
+    .log-line {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 0.25rem;
+    }
+
+    .log-prefix {
+      color: #6b7280;
+    }
+
+    .log-info {
+      color: #93c5fd;
+    }
+
+    .log-success {
+      color: #4ade80;
+    }
+
+    .log-warn {
+      color: #facc15;
+    }
+
+    .log-error {
+      color: #fb7185;
+    }
+
+    .hero-panel-footer {
+      margin-top: 0.6rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-soft);
+    }
+
+    .hero-chip-row {
+      display: flex;
+      gap: 0.3rem;
+      flex-wrap: wrap;
+    }
+
+    .hero-chip {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      padding: 0.12rem 0.4rem;
+      font-size: 0.68rem;
+      color: var(--text-muted);
+    }
+
+    /* FEATURE GRID SECTION */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.4rem;
+    }
+
+    @media (min-width: 880px) {
+      .feature-grid {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      }
+    }
+
+    .feature-card {
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at top left, #111827, #020617);
+      border: 1px solid var(--border-subtle);
+      padding: 1.4rem 1.5rem;
+      box-shadow: 0 14px 36px rgba(0, 0, 0, 0.6);
+    }
+
+    .feature-list {
+      list-style: none;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.1rem;
+      margin-top: 0.5rem;
+    }
+
+    @media (min-width: 640px) {
+      .feature-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    .feature-item-title {
+      font-size: 0.9rem;
+      margin-bottom: 0.15rem;
+      font-weight: 600;
+    }
+
+    .feature-item-text {
+      font-size: 0.83rem;
+      color: var(--text-muted);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      color: var(--accent-strong);
+      background: var(--accent-soft);
+      border: 1px solid rgba(59, 130, 246, 0.5);
+      margin-bottom: 0.5rem;
+    }
+
+    /* MODULE CARDS */
+    .module-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.2rem;
+    }
+
+    @media (min-width: 768px) {
+      .module-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .module-card {
+      border-radius: var(--radius-lg);
+      padding: 1.1rem 1.1rem 1.2rem;
+      background: radial-gradient(circle at top, #020617, #020617 30%, #020617 50%, #000 100%);
+      border: 1px solid var(--border-subtle);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .module-tag {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--text-soft);
+      margin-bottom: 0.35rem;
+    }
+
+    .module-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+    }
+
+    .module-desc {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .module-meta {
+      font-size: 0.76rem;
+      color: var(--text-soft);
+    }
+
+    .module-highlight {
+      position: absolute;
+      inset: auto auto 0 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, #3b82f6, #22c55e, #a855f7);
+      opacity: 0.8;
+    }
+
+    /* PRICING */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.4rem;
+    }
+
+    @media (min-width: 960px) {
+      .pricing-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .pricing-card {
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at top, #020617, #020617 32%, #020617 60%, #000 100%);
+      border: 1px solid var(--border-subtle);
+      padding: 1.4rem 1.3rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pricing-card.pro {
+      border: 1px solid rgba(59, 130, 246, 0.9);
+      box-shadow: 0 18px 40px rgba(37, 99, 235, 0.7);
+    }
+
+    .pricing-name {
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-soft);
+    }
+
+    .pricing-price {
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+
+    .pricing-price span {
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--text-soft);
+      margin-left: 0.2rem;
+    }
+
+    .pricing-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .pricing-list {
+      list-style: none;
+      margin-top: 0.4rem;
+      margin-bottom: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .pricing-list li::before {
+      content: "•";
+      margin-right: 0.35rem;
+      color: var(--accent-strong);
+    }
+
+    .pricing-cta {
+      margin-top: auto;
+    }
+
+    .pricing-badge {
+      position: absolute;
+      top: 0.9rem;
+      right: 1.1rem;
+      font-size: 0.7rem;
+      padding: 0.16rem 0.55rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-strong);
+      border: 1px solid rgba(59, 130, 246, 0.5);
+    }
+
+    /* SECURITY & DOCS */
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.4rem;
+    }
+
+    @media (min-width: 880px) {
+      .two-col {
+        grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.9fr);
+      }
+    }
+
+    .card {
+      border-radius: var(--radius-lg);
+      background: radial-gradient(circle at top left, #0b1120, #020617);
+      border: 1px solid var(--border-subtle);
+      padding: 1.3rem 1.4rem;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.65);
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .card p {
+      font-size: 0.86rem;
+      color: var(--text-muted);
+      margin-bottom: 0.6rem;
+    }
+
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      font-size: 0.83rem;
+      color: var(--text-muted);
+    }
+
+    .bullet-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.4rem;
+    }
+
+    .bullet-icon {
+      margin-top: 0.18rem;
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent-strong);
+      flex-shrink: 0;
+    }
+
+    .doc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      font-size: 0.85rem;
+    }
+
+    .doc-list a {
+      color: var(--accent-strong);
+    }
+
+    .doc-list a:hover {
+      text-decoration: underline;
+    }
+
+    /* CTA / CONTACT */
+    .cta {
+      border-radius: 26px;
+      background: radial-gradient(circle at top, #1d283a, #020617 56%);
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      padding: 1.8rem 1.6rem;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.9);
+      display: grid;
+      grid-template-columns: minmax(0, 1.5fr);
+      gap: 1.4rem;
+    }
+
+    @media (min-width: 880px) {
+      .cta {
+        grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+      }
+    }
+
+    .cta-title {
+      font-size: 1.3rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .cta-text {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .cta-meta {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    .cta-form {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      font-size: 0.8rem;
+    }
+
+    .field label {
+      color: var(--text-soft);
+    }
+
+    .field input,
+    .field textarea {
+      border-radius: 12px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: rgba(15, 23, 42, 0.9);
+      padding: 0.55rem 0.65rem;
+      color: var(--text-main);
+      font-size: 0.82rem;
+      outline: none;
+      resize: vertical;
+      min-height: 38px;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: var(--accent-strong);
+      box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.6);
+    }
+
+    .field-hint {
+      font-size: 0.7rem;
+      color: var(--text-soft);
+    }
+
+    footer {
+      border-top: 1px solid rgba(31, 41, 55, 0.9);
+      padding: 1.1rem 0 1.6rem;
+      font-size: 0.76rem;
+      color: var(--text-soft);
+    }
+
+    footer .footer-inner {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.6rem;
+      align-items: center;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 0.7rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      color: var(--text-soft);
+    }
+
+    .footer-links a:hover {
+      color: var(--accent-strong);
+    }
+
+    /* Reveal animation */
+    .reveal {
+      opacity: 0;
+      transform: translateY(14px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER / NAV -->
+  <header>
+    <div class="nav">
+      <div class="nav-left">
+        <!-- ЗДЕСЬ БУДЕТ ЛОГОТИП OV-Translator -->
+        <div class="nav-logo">OV</div>
+        <div class="nav-title">
+          <span class="nav-title-main">OV-Translator</span>
+          <span class="nav-title-sub">Echtzeit-Übersetzung vor Ort</span>
+        </div>
+      </div>
+      <nav class="nav-links">
+        <a href="#produkt">Produkt</a>
+        <a href="#module">Module</a>
+        <a href="#einsatz">Einsatzbereiche</a>
+        <a href="#tarife">Tarife</a>
+        <a href="#sicherheit">Sicherheit</a>
+        <a href="#kontakt">Kontakt</a>
+      </nav>
+      <div class="nav-cta">
+        <button class="btn btn-ghost" onclick="document.getElementById('tarife').scrollIntoView({behavior: 'smooth'})">
+          Tarife
+        </button>
+        <button class="btn btn-primary" onclick="document.getElementById('kontakt').scrollIntoView({behavior: 'smooth'})">
+          Demo anfragen
+        </button>
+      </div>
+      <div class="nav-burger" id="navBurger" aria-label="Menü öffnen">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="nav-mobile" id="navMobile">
+      <a href="#produkt">Produkt</a>
+      <a href="#module">Module</a>
+      <a href="#einsatz">Einsatzbereiche</a>
+      <a href="#tarife">Tarife</a>
+      <a href="#sicherheit">Sicherheit</a>
+      <a href="#kontakt">Kontakt</a>
+      <button class="btn btn-primary" onclick="document.getElementById('kontakt').scrollIntoView({behavior: 'smooth'})">
+        Demo anfragen
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="produkt">
+      <div class="container">
+        <div class="hero-grid">
+          <div class="hero-left reveal">
+            <div class="hero-eyebrow">
+              <span class="hero-dot"></span>
+              <span class="hero-eyebrow-text">Lokal. Sicher. Echtzeit.</span>
+            </div>
+            <h1 class="hero-title">
+              Echtzeit-Übersetzung für <span>Verwaltungen, Schulen & Kirchen</span>
+            </h1>
+            <p class="hero-subtitle">
+              OV-Translator verbindet Spracherkennung, KI-gestützte Übersetzung, Textoptimierung, Sprachausgabe
+              und Live-Streaming – lokal in Ihrem Netzwerk, ohne Cloud-Zwang und ohne komplizierte IT-Projekte.
+            </p>
+            <div class="hero-badges">
+              <div class="hero-badge">Einsatzbereit in wenigen Minuten</div>
+              <div class="hero-badge">Ideal für Bürgerbüros, Gottesdienste & Veranstaltungen</div>
+              <div class="hero-badge">DSGVO-freundliche Architektur</div>
+            </div>
+            <div class="hero-actions">
+              <button class="btn btn-primary"
+                onclick="document.getElementById('kontakt').scrollIntoView({behavior: 'smooth'})">
+                Live-Demo vereinbaren
+              </button>
+              <button class="btn btn-ghost"
+                onclick="document.getElementById('tarife').scrollIntoView({behavior: 'smooth'})">
+                Tarife ansehen
+              </button>
+            </div>
+            <div class="hero-meta">
+              <span><span class="hero-meta-dot"></span> Lokale Installation</span>
+              <span>Keine laufenden Cloud-Kosten durch den Anbieter</span>
+            </div>
+          </div>
+
+          <div class="hero-right reveal">
+            <div class="hero-panel">
+              <div class="hero-panel-header">
+                <div>
+                  <div class="hero-panel-title">OV-Translator · Live-Log</div>
+                  <div style="font-size: 0.72rem; color: var(--text-soft);">
+                    Beispiel für den internen Statusmonitor
+                  </div>
+                </div>
+                <span class="hero-tag">Demo-Ansicht</span>
+              </div>
+              <div class="hero-panel-body">
+                <span class="log-line">
+                  <span class="log-prefix">[12:03:11] </span>
+                  <span class="log-info">Audio-Input erkannt · Sitzung gestartet (DE → AR)</span>
+                </span>
+                <span class="log-line">
+                  <span class="log-prefix">[12:03:12] </span>
+                  <span class="log-success">ASR · Whisper large-v2 · GPU-Beschleunigung aktiv</span>
+                </span>
+                <span class="log-line">
+                  <span class="log-prefix">[12:03:14] </span>
+                  <span class="log-info">Transkription: „Guten Tag, herzlich willkommen im Rathaus
+                  Attendorn.“</span>
+                </span>
+                <span class="log-line">
+                  <span class="log-prefix">[12:03:15] </span>
+                  <span class="log-success">DeepL · Übersetzung erstellt (DE → AR)</span>
+                </span>
+                <span class="log-line">
+                  <span class="log-prefix">[12:03:15] </span>
+                  <span class="log-info">GPT · Textstil: „verwaltungskonform, respektvoll“ angewendet</span>
+                </span>
+                <span class="log-line">
+                  <span class="log-prefix">[12:03:16] </span>
+                  <span class="log-success">TTS · Audio-Datei erzeugt (Neural Voice)</span>
+                </span>
+                <span class="log-line">
+                  <span class="log-prefix">[12:03:16] </span>
+                  <span class="log-info">Streaming · 23 Teilnehmer im lokalen WLAN verbunden</span>
+                </span>
+                <span class="log-line">
+                  <span class="log-prefix">[12:03:18] </span>
+                  <span class="log-success">Status · System stabil · Latenz &lt; 1,2 Sekunden</span>
+                </span>
+                <span class="log-line">
+                  <span class="log-prefix">[12:04:02] </span>
+                  <span class="log-warn">Hinweis · API-Limit Annäherung (DeepL) – Schlüssel des Kunden prüfen</span>
+                </span>
+                <span class="log-line">
+                  <span class="log-prefix">[12:04:19] </span>
+                  <span class="log-info">Log · Sitzung protokolliert (ohne personenbezogene Daten)</span>
+                </span>
+              </div>
+              <div class="hero-panel-footer">
+                <div class="hero-chip-row">
+                  <span class="hero-chip">Whisper ASR</span>
+                  <span class="hero-chip">DeepL / Google</span>
+                  <span class="hero-chip">GPT-Optimierung</span>
+                  <span class="hero-chip">Neurale Stimmen</span>
+                </div>
+                <div style="font-size: 0.72rem; color: var(--text-soft);">
+                  Echtzeit-Überblick für Administratoren
+                </div>
+              </div>
+            </div>
+          </div>
+        </div><!-- hero-grid -->
+      </div>
+    </section>
+
+    <!-- FEATURE GRID / PRODUKTÜBERSICHT -->
+    <section id="einsatz">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="section-kicker">Übersicht</div>
+          <h2 class="section-title">Für welche Situationen wurde OV-Translator entwickelt?</h2>
+          <p class="section-subtitle">
+            OV-Translator wurde aus der Praxis heraus entwickelt und ist für reale Szenarien optimiert – von
+            Bürgergesprächen über Elternabende bis hin zu Gottesdiensten und Integrationsveranstaltungen.
+          </p>
+        </div>
+        <div class="feature-grid">
+          <div class="feature-card reveal">
+            <span class="pill">Typische Einsatzbereiche</span>
+            <ul class="feature-list">
+              <li>
+                <div class="feature-item-title">Stadtverwaltung & Bürgerbüro</div>
+                <div class="feature-item-text">
+                  Unterstützung bei Gesprächen mit Bürgerinnen und Bürgern, die Deutsch noch nicht sicher
+                  beherrschen.
+                </div>
+              </li>
+              <li>
+                <div class="feature-item-title">Schulen & Bildung</div>
+                <div class="feature-item-text">
+                  Übersetzung bei Elternabenden, Beratungsgesprächen, Schulprojekten oder Integrationsklassen.
+                </div>
+              </li>
+              <li>
+                <div class="feature-item-title">Kirchen & Gottesdienste</div>
+                <div class="feature-item-text">
+                  Echtzeit-Übertragung von Predigten und Veranstaltungen in mehrere Sprachen, auch auf
+                  Smartphones.
+                </div>
+              </li>
+              <li>
+                <div class="feature-item-title">Soziale Träger & Beratung</div>
+                <div class="feature-item-text">
+                  Caritas, DRK, AWO, Integrationsdienste – für Beratungsgespräche, Gruppenangebote und
+                  Infoveranstaltungen.
+                </div>
+              </li>
+            </ul>
+          </div>
+          <div class="feature-card reveal">
+            <h3 style="font-size: 1rem; margin-bottom: 0.35rem;">Ihre Vorteile auf einen Blick</h3>
+            <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.7rem;">
+              OV-Translator ist ein Werkzeug, das sich in Ihren Alltag einfügt – ohne, dass Sie Ihre Abläufe
+              neu erfinden müssen.
+            </p>
+            <ul class="bullet-list">
+              <li>
+                <span class="bullet-icon"></span>
+                <span><strong>Lokal & sicher:</strong> Daten bleiben in Ihrer Einrichtung, kein externer
+                  Cloud-Zwang.</span>
+              </li>
+              <li>
+                <span class="bullet-icon"></span>
+                <span><strong>Sofort verständlich:</strong> Klarer Text, optimiert für Verwaltung,
+                  Schule und Kirche.</span>
+              </li>
+              <li>
+                <span class="bullet-icon"></span>
+                <span><strong>Mehrsprachige Teilhabe:</strong> Bürgerinnen, Eltern, Besucher, Geflüchtete – alle
+                  erhalten Zugang zu Informationen.</span>
+              </li>
+              <li>
+                <span class="bullet-icon"></span>
+                <span><strong>Flexible Nutzung:</strong> Projektion an der Wand, Anzeige am Laptop oder
+                  Übersetzung direkt aufs Smartphone.</span>
+              </li>
+              <li>
+                <span class="bullet-icon"></span>
+                <span><strong>Planbare Kosten:</strong> Einmalige Lizenz, optionale jährliche Wartung.</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MODULE -->
+    <section id="module">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="section-kicker">Module</div>
+          <h2 class="section-title">Fünf Module – ein System</h2>
+          <p class="section-subtitle">
+            OV-Translator bündelt alle Schritte von der Spracherkennung über die Übersetzung und Textoptimierung
+            bis hin zur Audioausgabe und Live-Übertragung im Netzwerk.
+          </p>
+        </div>
+        <div class="module-grid">
+          <div class="module-card reveal">
+            <div class="module-tag">Modul 1</div>
+            <div class="module-title">ASR – Spracherkennung (Whisper)</div>
+            <p class="module-desc">
+              Hochpräzise Erkennung gesprochener Sprache – auch in anspruchsvollen Umgebungen. Whisper-Modelle
+              (large / medium / small) mit optionaler GPU-Beschleunigung.
+            </p>
+            <p class="module-meta">
+              • VAD für automatische Satzgrenzen<br />
+              • Formatierte Textausgabe<br />
+              • Stabil in Echtzeit-Szenarien
+            </p>
+            <div class="module-highlight"></div>
+          </div>
+          <div class="module-card reveal">
+            <div class="module-tag">Modul 2</div>
+            <div class="module-title">Übersetzung (DeepL / Google)</div>
+            <p class="module-desc">
+              Übersetzung der erkannten Sätze in eine oder mehrere Zielsprachen – sofort, automatisiert und
+              konfigurierbar.
+            </p>
+            <p class="module-meta">
+              • Über 30 Sprachen<br />
+              • Flexible Zielsprachen<br />
+              • Vollautomatischer Workflow
+            </p>
+            <div class="module-highlight"></div>
+          </div>
+          <div class="module-card reveal">
+            <div class="module-tag">Modul 3</div>
+            <div class="module-title">GPT-Textoptimierung</div>
+            <p class="module-desc">
+              Auf Wunsch kann der Text KI-gestützt optimiert werden: stilistisch, sprachlich und kontextsensibel
+              – z. B. „verwaltungskonform“, „verständlich für Eltern“, „gottesdienstgeeignet“.
+            </p>
+            <p class="module-meta">
+              • Anpassbare Prompts<br />
+              • Spezielle Textstile<br />
+              • Ideal für öffentliche Kommunikation
+            </p>
+            <div class="module-highlight"></div>
+          </div>
+          <div class="module-card reveal">
+            <div class="module-tag">Modul 4</div>
+            <div class="module-title">TTS – Sprachausgabe</div>
+            <p class="module-desc">
+              Neutrale und natürliche Stimmen sprechen die Übersetzung aus – z. B. für Personen mit
+              Leseeinschränkungen, große Räume oder hybride Veranstaltungen.
+            </p>
+            <p class="module-meta">
+              • Neural Voices<br />
+              • Mehrere Sprachen<br />
+              • Audio-Dateien für Dokumentation
+            </p>
+            <div class="module-highlight"></div>
+          </div>
+          <div class="module-card reveal">
+            <div class="module-tag">Modul 5</div>
+            <div class="module-title">Live-Streaming im lokalen Netzwerk</div>
+            <p class="module-desc">
+              Anzeige der aktuellen Übersetzung im Browser (Laptop, Tablet, Smartphone) – optional mit
+              Audio-Streaming für alle Teilnehmer gleichzeitig.
+            </p>
+            <p class="module-meta">
+              • Ideal für Sitzungen & Gottesdienste<br />
+              • Lokales WLAN statt Internetpflicht<br />
+              • Branding mit Logo & Farben Ihrer Einrichtung
+            </p>
+            <div class="module-highlight"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="tarife">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="section-kicker">Tarife</div>
+          <h2 class="section-title">Lizenzmodelle für unterschiedliche Anforderungen</h2>
+          <p class="section-subtitle">
+            Alle Lizenzen gelten unbefristet. Die jährliche Wartung umfasst Updates, technische Anpassungen und
+            Support und kann je nach Bedarf gebucht werden.
+          </p>
+        </div>
+        <div class="pricing-grid">
+          <div class="pricing-card reveal">
+            <div class="pricing-name">Basis</div>
+            <div class="pricing-price">1.500 €<span>einmalig</span></div>
+            <div class="pricing-note">
+              Für kleine Einrichtungen, Testinstallationen oder Einzelarbeitsplätze.
+            </div>
+            <ul class="pricing-list">
+              <li>Spracherkennung (ASR – Whisper)</li>
+              <li>Übersetzung in eine Ziel­sprache</li>
+              <li>Formatierte Textdateien</li>
+              <li>Lokale Installation</li>
+            </ul>
+            <div class="pricing-cta">
+              <button class="btn btn-ghost"
+                onclick="document.getElementById('kontakt').scrollIntoView({behavior: 'smooth'})">
+                Angebot für Basis anfragen
+              </button>
+            </div>
+          </div>
+
+          <div class="pricing-card pro reveal">
+            <div class="pricing-badge">Empfohlen</div>
+            <div class="pricing-name">Pro</div>
+            <div class="pricing-price">4.900 €<span>einmalig</span></div>
+            <div class="pricing-note">
+              Für Schulen, Kirchen, Beratungsstellen und soziale Träger – die „Allround“-Lösung.
+            </div>
+            <ul class="pricing-list">
+              <li>Alle Basis-Funktionen</li>
+              <li>Mehrsprachige Übersetzungen</li>
+              <li>GPT-Textoptimierung</li>
+              <li>TTS – Sprachausgabe (Neural Voices)</li>
+              <li>Stabiler End-to-End-Workflow</li>
+            </ul>
+            <div class="pricing-cta">
+              <button class="btn btn-primary"
+                onclick="document.getElementById('kontakt').scrollIntoView({behavior: 'smooth'})">
+                Pro-Demo vereinbaren
+              </button>
+            </div>
+          </div>
+
+          <div class="pricing-card reveal">
+            <div class="pricing-name">Enterprise</div>
+            <div class="pricing-price">ab 9.900 €<span>einmalig</span></div>
+            <div class="pricing-note">
+              Für Stadtverwaltungen, größere Organisationen und professionelle Live-Szenarien.
+            </div>
+            <ul class="pricing-list">
+              <li>Alle Pro-Funktionen</li>
+              <li>Live-Streaming im lokalen Netzwerk</li>
+              <li>Branding mit Logo & Design</li>
+              <li>Optionale Installation vor Ort</li>
+              <li>Priorisierter Support & Wartung</li>
+            </ul>
+            <div class="pricing-cta">
+              <button class="btn btn-ghost"
+                onclick="document.getElementById('kontakt').scrollIntoView({behavior: 'smooth'})">
+                Enterprise-Gespräch vereinbaren
+              </button>
+            </div>
+          </div>
+        </div>
+        <p style="font-size: 0.78rem; color: var(--text-soft); margin-top: 0.8rem;" class="reveal">
+          Hinweis: Wartung (Updates, Anpassungen, Support) kann optional gebucht werden und beträgt je nach
+          Lizenzmodell ca. 20–30 % der einmaligen Lizenzgebühr pro Jahr.
+        </p>
+      </div>
+    </section>
+
+    <!-- SECURITY / DOKUMENTE -->
+    <section id="sicherheit">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="section-kicker">Sicherheit & Verträge</div>
+          <h2 class="section-title">Datenschutz, Transparenz und klare Vereinbarungen</h2>
+          <p class="section-subtitle">
+            OV-Translator wurde mit Blick auf Sicherheit, Transparenz und klare rechtliche Rahmenbedingungen
+            entwickelt – passend zu den Anforderungen moderner Verwaltungen und Einrichtungen.
+          </p>
+        </div>
+        <div class="two-col">
+          <div class="card reveal">
+            <h3>Sicherheit & Datenschutz</h3>
+            <p>
+              Die Software arbeitet primär lokal in Ihrem Netzwerk. Übersetzte Inhalte werden nicht in externe
+              Clouds hochgeladen. API-Schlüssel (z. B. DeepL, Google, GPT) werden von Ihrer Einrichtung gestellt
+              und lokal verwaltet.
+            </p>
+            <ul class="bullet-list">
+              <li>
+                <span class="bullet-icon"></span>
+                <span><strong>Lokale Verarbeitung,</strong> keine automatische Speicherung personenbezogener
+                  Daten.</span>
+              </li>
+              <li>
+                <span class="bullet-icon"></span>
+                <span><strong>Transparente Update-Strategie</strong> mit dokumentierter
+                  „Update & Security Policy“.</span>
+              </li>
+              <li>
+                <span class="bullet-icon"></span>
+                <span><strong>Kontrolle bei Ihnen:</strong> Sie behalten die Hoheit über Netzwerk, Geräte und
+                  API-Schlüssel.</span>
+              </li>
+            </ul>
+          </div>
+          <div class="card reveal">
+            <h3>Verträge & Dokumente</h3>
+            <p>
+              Für eine saubere Zusammenarbeit stehen Ihnen klare Dokumente zur Verfügung – abgestimmt auf den
+              Einsatz in öffentlichen Einrichtungen.
+            </p>
+            <ul class="doc-list">
+              <li>• Produktpräsentation – Überblick über Funktionen & Architektur</li>
+              <li>• Tarifübersicht – Basis / Pro / Enterprise</li>
+              <li>• Offizielles Angebot – Leistungsumfang & Preise</li>
+              <li>• Lizenzvertrag (EULA) – Nutzungsrechte & Rahmenbedingungen</li>
+              <li>• Wartungsvertrag – Updates, Support, Reaktionszeiten</li>
+              <li>• Update & Security Policy – Sicherheits- und Updatekonzept</li>
+            </ul>
+            <p style="font-size: 0.78rem; color: var(--text-soft); margin-top: 0.4rem;">
+              Die Dokumente können auf Wunsch vorab zur internen Prüfung (z. B. Rechtsamt, Datenschutz, IT)
+              bereitgestellt werden.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT / DEMO -->
+    <section id="kontakt">
+      <div class="container">
+        <div class="section-header reveal">
+          <div class="section-kicker">Kontakt</div>
+          <h2 class="section-title">Live-Demo oder Angebot anfragen</h2>
+          <p class="section-subtitle">
+            Gerne stelle ich Ihnen OV-Translator in einer persönlichen Demonstration vor – online oder vor Ort in
+            Ihrer Einrichtung. Nutzen Sie das Formular oder kontaktieren Sie mich direkt.
+          </p>
+        </div>
+        <div class="cta reveal">
+          <div>
+            <h3 class="cta-title">Nächster Schritt: Ein kurzes Gespräch, eine klare Lösung</h3>
+            <p class="cta-text">
+              In einem unverbindlichen Termin klären wir gemeinsam, wie OV-Translator Ihre Einrichtung
+              unterstützen kann – z. B. bei Bürgergesprächen, Elternabenden, Gottesdiensten oder
+              Informationsveranstaltungen.
+            </p>
+            <div class="cta-meta">
+              <p><strong>Typischer Ablauf:</strong></p>
+              <p>1. Kurze Bedarfsklärung (10–15 Minuten)</p>
+              <p>2. Live-Demo des Systems</p>
+              <p>3. Vorschlag für ein passendes Lizenzmodell</p>
+            </div>
+          </div>
+          <div>
+            <!-- Здесь можно подключить реальную отправку (Formspree / eigene Backend-Route) -->
+            <form class="cta-form" onsubmit="event.preventDefault(); alert('Vielen Dank! Ihre Anfrage wurde lokal erfasst. In der Live-Version wird sie an den Entwickler gesendet.');">
+              <div class="field">
+                <label for="org">Einrichtung / Organisation</label>
+                <input id="org" type="text" placeholder="z. B. Stadtverwaltung Attendorn, Gesamtschule, Kirchengemeinde" />
+              </div>
+              <div class="field">
+                <label for="email">E-Mail</label>
+                <input id="email" type="email" placeholder="Ihre dienstliche E-Mail-Adresse" />
+              </div>
+              <div class="field">
+                <label for="message">Kurze Nachricht</label>
+                <textarea id="message" rows="3" placeholder="Wo möchten Sie OV-Translator einsetzen? (z. B. Bürgerbüro, Schule, Gottesdienst, Beratung)"></textarea>
+                <div class="field-hint">
+                  Hinweis: Dieses Formular ist in dieser Demoversion nur eine lokale Simulation. Für den Echtbetrieb
+                  tragen Sie hier Ihre eigene Versandlösung ein.
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary">Anfrage senden</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-inner">
+        <div>© <span id="year"></span> OV-Translator – Entwicklung: Olexandr Vasylenko</div>
+        <div class="footer-links">
+          <!-- Здесь можно добавить реальные ссылки на Impressum / Datenschutz -->
+          <a href="#produkt">Produkt</a>
+          <a href="#tarife">Tarife</a>
+          <a href="#kontakt">Kontakt</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Jahr im Footer automatisch setzen
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Burger-Menü
+    const navBurger = document.getElementById('navBurger');
+    const navMobile = document.getElementById('navMobile');
+    navBurger.addEventListener('click', () => {
+      navBurger.classList.toggle('active');
+      const isOpen = navMobile.style.display === 'flex';
+      navMobile.style.display = isOpen ? 'none' : 'flex';
+    });
+    navMobile.querySelectorAll('a').forEach(a =>
+      a.addEventListener('click', () => {
+        navBurger.classList.remove('active');
+        navMobile.style.display = 'none';
+      })
+    );
+
+    // Reveal-Animation
+    const revealEls = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+
+    revealEls.forEach((el) => observer.observe(el));
+  </script>
+</body>
+</html>
