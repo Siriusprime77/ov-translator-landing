@@ -310,6 +310,49 @@
     }
 
     /* HERO */
+
+    /* HERO c фоновым баннером */
+    .hero {
+      padding-top: 2.8rem;
+      padding-bottom: 3.8rem;
+      position: relative;          /* добавили */
+      overflow: hidden;            /* добавили, чтобы баннер не вылезал */
+    }
+    
+    /* Новый класс, который включает фон-картинку */
+    .hero-banner::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: url("img/hero-ov-translator.jpg");
+      background-size: cover;
+      background-position: center;
+      opacity: 0.65;               /* прозрачность, чтобы текст читался */
+      filter: blur(0.5px);         /* лёгкий софт-фокус */
+      transform: scale(1.03);      /* чуть увеличиваем, чтобы не было краёв */
+      z-index: 0;
+    }
+    
+    /* Градиент вниз, чтобы картинка плавно перешла в тёмный фон сайта */
+    .hero-banner::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.1) 0%,
+        rgba(3, 7, 18, 0.75) 55%,
+        #020617 100%
+      );
+      z-index: 1;
+    }
+    
+    /* Сетка с текстом поверх баннера */
+    .hero-grid {
+      position: relative;
+      z-index: 2;
+    }
+    
     .hero {
       padding-top: 2.8rem;
       padding-bottom: 3.8rem;
@@ -969,7 +1012,7 @@
 
   <main>
     <!-- HERO -->
-    <section class="hero" id="produkt">
+    <section class="hero hero-banner" id="produkt">
       <div class="container">
         <div class="hero-grid">
           <div class="hero-left reveal">
